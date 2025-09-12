@@ -135,7 +135,7 @@ def label_outliers(area_dict, all_areas, threshold=0.5):
 def write_csv(rows, csv_path):
     with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['文件路径', '页码', '图片', '角度', '标签', '面积', 'bid', '异常', 'bbox', '位置'])
+        writer.writerow(['文件路径', '页码', '图片', '角度', '标签', '面积', 'bid', '异常'])
         for row in rows:
             writer.writerow(row)
 

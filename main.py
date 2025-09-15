@@ -161,7 +161,7 @@ def list_images(pdf_path, proximity=20):
         images = page.get_images(full=True)
         print(f"Page {page_num}:")
         for img in images:
-            xref = img[0]
+            xref = img[0] # determine duplication
             name = img[7]
             img_info = doc.extract_image(xref)
             img_bytes = img_info["image"]
@@ -212,7 +212,7 @@ def main():
     # transformation_matrix_extractor("../思溪藏_扬州古籍_PDF(最终)")
     # extract_image("../../02_Data/思溪藏_扬州古籍_PDF/135/食字第07册.pdf", 0, "Im1")
     # extract_matrixes("../../02_Data/思溪藏_扬州古籍_PDF/097/吊字第10册.pdf")
-    list_images("../../02_Data/思溪藏_扬州古籍_PDF/119/戎字第08册.pdf")
+    list_images("../../02_Data/思溪藏_扬州古籍_PDF/168/良字第02册.pdf")
     # find_outlier_images("../../02_Data/思溪藏_扬州古籍_PDF/097/吊字第10册.pdf")
     # transformation_matrix_extractor("../../02_Data/思溪藏_扬州古籍_PDF", threshold=0.5)
 

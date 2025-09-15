@@ -2,11 +2,11 @@ from bson import decode_all
 import csv
 
 sx_fold = 'sx_fold.csv'
-bids = 'bids.csv'
-bids_with_fold = 'bids_with_fold.csv'
+bids = '15092025_bids-dims-scale.csv'
+bids_with_fold = 'bidsdimscale.csv'
 
 def read_bson():
-    with open('../../02_Data/tripitaka-aux/sx_pdf_page.bson', 'rb') as f:
+    with open('../../02_Data/tripitaka-aux/sx_fold.bson', 'rb') as f:
         data = f.read()
         documents = decode_all(data)
     
@@ -17,7 +17,7 @@ def read_bson():
             all_keys.update(doc.keys())
         all_keys = sorted(all_keys)  # Optional: sort keys for consistent column order
 
-        with open('sx_pdf_page.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        with open('sx_fold.csv', 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=all_keys)
             writer.writeheader()
             writer.writerows(documents)
@@ -38,10 +38,13 @@ def merge_fold_id_from_db_to_extracted_csv():
         writer = csv.DictWriter(f_out, fieldnames=fieldnames)
         writer.writeheader()
         for row in reader:
+            if None in row:
+                continue
             bid = row.get('bid')
             row['fold_id'] = bid_to_fold.get(bid, '')
-            writer.writerow(row)
+
+            filtered_row = {k: row[k] for k in fieldnames if k in row}
+            writer.writerow(filtered_row)
 
 if __name__ == "__main__":
-    # merge_fold_id_from_db_to_extracted_csv()
-    read_bson()
+    merge_fold_id_from_db_to_extracted_csv()

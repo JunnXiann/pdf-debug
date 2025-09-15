@@ -212,7 +212,7 @@ def main():
     # transformation_matrix_extractor("../思溪藏_扬州古籍_PDF(最终)")
     # extract_image("../../02_Data/思溪藏_扬州古籍_PDF/135/食字第07册.pdf", 0, "Im1")
     # extract_matrixes("../../02_Data/思溪藏_扬州古籍_PDF/097/吊字第10册.pdf")
-    list_images("../../02_Data/思溪藏_扬州古籍_PDF/104/汤字第03册.pdf")
+    list_images("../../02_Data/思溪藏_扬州古籍_PDF/119/戎字第08册.pdf")
     # find_outlier_images("../../02_Data/思溪藏_扬州古籍_PDF/097/吊字第10册.pdf")
     # transformation_matrix_extractor("../../02_Data/思溪藏_扬州古籍_PDF", threshold=0.5)
 

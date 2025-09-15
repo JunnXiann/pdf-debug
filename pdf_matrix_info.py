@@ -3,7 +3,23 @@ import os
 import re
 import csv
 import numpy as np
+import pandas as pd
 from PIL import Image
+
+def load_page_info(csv_path):
+    """
+    Loads the page info CSV and returns a dict:
+    {(pdf_name, pi): {'whole_img': bool, 'dim': dict}}
+    """
+    df = pd.read_csv(csv_path, converters={'dim': eval})
+    page_info = {}
+    for _, row in df.iterrows():
+        key = (row['pdf_name'], row['pi'])
+        page_info[key] = {
+            'whole_img': bool(row['whole_img']),
+            'dim': row['dim']
+        }
+    return page_info
 
 def orientation_label(angle):
     a = abs(angle)
@@ -76,7 +92,6 @@ def sort_images_by_position(bbox_dict, page_num):
         current_pos += 1
     
     return position_map
-  
 
 def extract_image_transformations(pdf_path):
     doc = fitz.open(pdf_path)
@@ -151,7 +166,7 @@ def extract_image_number(im_name):
         return int(match.group(1))
     return None
 
-def process_pdf(pdf_path, subdir, filename, threshold=0.5):
+def process_pdf(pdf_path, subdir, filename, threshold=0.5, page_info=None):
     dir = int(subdir)
     vol = extract_volume_number(filename)
     area_dict, all_areas, bbox_dict = collect_image_areas(pdf_path)
@@ -160,7 +175,15 @@ def process_pdf(pdf_path, subdir, filename, threshold=0.5):
     outlier_dict, median_area = label_outliers(area_dict, all_areas, threshold)
     skewed = extract_image_transformations(pdf_path)
     rows = []
+    pdf_base = os.path.splitext(filename)[0]
     for pagenum, images in skewed.items():
+        info_key = (pdf_base, pagenum)
+        if page_info:
+            if info_key not in page_info:
+                print(f"[WARN] info_key {info_key} not found in page_info, skipping page.")
+                continue
+            if page_info[info_key]['whole_img']:
+                continue  # skip this page
         for img in images:
             key = (pagenum, img['image'])
             area, outlier = outlier_dict.get(key, (0, ""))
@@ -179,7 +202,7 @@ def process_pdf(pdf_path, subdir, filename, threshold=0.5):
             ])
     return rows
 
-def transformation_matrix_extractor(source_folder, threshold=0.5, csv_path='bids.csv', max_files=None):
+def transformation_matrix_extractor(source_folder, threshold=0.5, csv_path='15092025_bids.csv', max_files=None):
     all_rows = []
     file_count =  0
     for dirpath, _, filenames in os.walk(source_folder):

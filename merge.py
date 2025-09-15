@@ -6,7 +6,7 @@ bids = 'bids.csv'
 bids_with_fold = 'bids_with_fold.csv'
 
 def read_bson():
-    with open('../../02_Data/tripitaka-aux/sx_fold.bson', 'rb') as f:
+    with open('../../02_Data/tripitaka-aux/sx_pdf_page.bson', 'rb') as f:
         data = f.read()
         documents = decode_all(data)
     
@@ -17,7 +17,7 @@ def read_bson():
             all_keys.update(doc.keys())
         all_keys = sorted(all_keys)  # Optional: sort keys for consistent column order
 
-        with open('sx_fold.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        with open('sx_pdf_page.csv', 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=all_keys)
             writer.writeheader()
             writer.writerows(documents)
@@ -43,4 +43,5 @@ def merge_fold_id_from_db_to_extracted_csv():
             writer.writerow(row)
 
 if __name__ == "__main__":
-    merge_fold_id_from_db_to_extracted_csv()
+    # merge_fold_id_from_db_to_extracted_csv()
+    read_bson()

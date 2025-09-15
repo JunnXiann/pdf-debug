@@ -2,7 +2,7 @@ from bson import decode_all
 import csv
 
 sx_fold = 'sx_fold.csv'
-bids = '15092025_bids-dims-scale.csv'
+bids = 'bids-0915.csv'
 bids_with_fold = 'bidsdimscale.csv'
 
 def read_bson():
